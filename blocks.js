@@ -572,7 +572,7 @@ SyntaxElementMorph.prototype.revertToDefaultInput = function (arg, noValues) {
     if (idx !== -1) {
         if (this instanceof BlockMorph) {
             deflt = this.labelPart(this.parseSpec(this.blockSpec)[idx]);
-            if (deflt instanceof InputSlotMorph && this.definition) {
+            if (deflt instanceof InputSlotMorph && this.definition && !deflt.choices) {
                 deflt.setChoices.apply(
                     deflt,
                     this.definition.inputOptionsOfIdx(inp)
@@ -2154,7 +2154,7 @@ BlockMorph.prototype.setSpec = function (spec, silently) {
         if (myself.isPrototype) {
             myself.add(myself.placeHolder());
         }
-        if (part instanceof InputSlotMorph && myself.definition) {
+        if (part instanceof InputSlotMorph && myself.definition && !part.choices) {
             part.setChoices.apply(
                 part,
                 myself.definition.inputOptionsOfIdx(inputIdx)
@@ -6902,7 +6902,7 @@ InputSlotMorph.prototype.arrow = function () {
     );
 };
 
-InputSlotMorph.prototype.setContents = function (aStringOrFloat) {
+InputSlotMorph.prototype.setContents = function (aStringOrFloat, choice) {
     var cnts = this.contents(),
         dta = aStringOrFloat,
         isConstant = dta instanceof Array;
@@ -6918,6 +6918,8 @@ InputSlotMorph.prototype.setContents = function (aStringOrFloat) {
     cnts.text = dta;
     if (isNil(dta)) {
         cnts.text = '';
+    } else if (choice instanceof MenuItemMorph) {
+        cnts.text = choice.labelString
     } else if (dta.toString) {
         cnts.text = dta.toString();
     }
@@ -7470,6 +7472,12 @@ InputSlotMorph.prototype.evaluate = function () {
         if (!isNaN(num)) {
             return num;
         }
+    }
+    if(this.choices)
+    {
+        val = this.choices[contents.text]
+        if (val)
+            return val;
     }
     return contents.text;
 };

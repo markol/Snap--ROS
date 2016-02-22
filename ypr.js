@@ -822,7 +822,8 @@ var sb = (function (sb) {
 			unevaluatedList: '%mult%anyUE',
 			unevaluatedBoolean: '%boolUE',
 			unevaluatedBooleanList: '%mult%boolUE',
-			template: '%upvar'
+			template: '%upvar',
+            sound: '%snd'
 		}, blockSelectors = {
 			// Motion': '',
 			'forward:': 'forward',

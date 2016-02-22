@@ -906,7 +906,44 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'sensing',
             spec: 'current %dates'
         },
-
+        // ROS blocks
+        reportRosMessage: {
+            type: 'reporter',
+            category: 'variables',
+            spec: 'ROS message %s ?',
+             defaults: ['/topic']
+        },
+        callRosService: {
+            type: 'reporter',
+            category: 'variables',
+            spec: 'ROS service %s arg %s ?',
+            defaults: ['/service', 'text']
+        },
+        rosBoolMessage: {
+            type: 'command',
+            category: 'variables',
+            spec: 'bool ROS message %s %b',
+            defaults: ['/topic']
+        },
+        rosStringMessage: {
+            type: 'command',
+            category: 'variables',
+            spec: 'string ROS message %s %s',
+            defaults: ['/topic', 'text']
+        },
+        rosFloatMessage: {
+            type: 'command',
+            category: 'variables',
+            spec: 'float ROS message %s %n',
+            defaults: ['/topic', '3.1415']
+        },
+        rosCustomMessage: {
+            type: 'command',
+            category: 'variables',
+            spec: 'custom ROS message %s JSON %s type %s',
+            defaults: ['/topic', '{}', 'std_msgs/Empty']
+        },
+        
         // Operators
         reifyScript: {
             type: 'ring',
@@ -1751,59 +1788,62 @@ SpriteMorph.prototype.blockTemplates = function (category) {
     }
 
     if (cat === 'motion') {
-
-        blocks.push(block('forward'));
-        blocks.push(block('turn'));
-        blocks.push(block('turnLeft'));
-        blocks.push('-');
-        blocks.push(block('setHeading'));
-        blocks.push(block('doFaceTowards'));
-        blocks.push('-');
-        blocks.push(block('gotoXY'));
-        blocks.push(block('doGotoObject'));
-        blocks.push(block('doGlide'));
-        blocks.push('-');
-        blocks.push(block('changeXPosition'));
-        blocks.push(block('setXPosition'));
-        blocks.push(block('changeYPosition'));
-        blocks.push(block('setYPosition'));
-        blocks.push('-');
-        blocks.push(block('bounceOffEdge'));
-        blocks.push('-');
-        blocks.push(watcherToggle('xPosition'));
-        blocks.push(block('xPosition'));
-        blocks.push(watcherToggle('yPosition'));
-        blocks.push(block('yPosition'));
-        blocks.push(watcherToggle('direction'));
-        blocks.push(block('direction'));
+        if (world.isDevMode) {
+            blocks.push(block('forward'));
+            blocks.push(block('turn'));
+            blocks.push(block('turnLeft'));
+            blocks.push('-');
+            blocks.push(block('setHeading'));
+            blocks.push(block('doFaceTowards'));
+            blocks.push('-');
+            blocks.push(block('gotoXY'));
+            blocks.push(block('doGotoObject'));
+            blocks.push(block('doGlide'));
+            blocks.push('-');
+            blocks.push(block('changeXPosition'));
+            blocks.push(block('setXPosition'));
+            blocks.push(block('changeYPosition'));
+            blocks.push(block('setYPosition'));
+            blocks.push('-');
+            blocks.push(block('bounceOffEdge'));
+            blocks.push('-');
+            blocks.push(watcherToggle('xPosition'));
+            blocks.push(block('xPosition'));
+            blocks.push(watcherToggle('yPosition'));
+            blocks.push(block('yPosition'));
+            blocks.push(watcherToggle('direction'));
+            blocks.push(block('direction'));
+        }
 
     } else if (cat === 'looks') {
 
-        blocks.push(block('doSwitchToCostume'));
-        blocks.push(block('doWearNextCostume'));
-        blocks.push(watcherToggle('getCostumeIdx'));
-        blocks.push(block('getCostumeIdx'));
-        blocks.push('-');
+        
         blocks.push(block('doSayFor'));
         blocks.push(block('bubble'));
         blocks.push(block('doThinkFor'));
         blocks.push(block('doThink'));
         blocks.push('-');
-        blocks.push(block('changeEffect'));
-        blocks.push(block('setEffect'));
-        blocks.push(block('clearEffects'));
-        blocks.push('-');
-        blocks.push(block('changeScale'));
-        blocks.push(block('setScale'));
-        blocks.push(watcherToggle('getScale'));
-        blocks.push(block('getScale'));
-        blocks.push('-');
-        blocks.push(block('show'));
-        blocks.push(block('hide'));
-        blocks.push('-');
-        blocks.push(block('comeToFront'));
-        blocks.push(block('goBack'));
-
+        if (this.world().isDevMode) {
+            blocks.push(block('doSwitchToCostume'));
+            blocks.push(block('doWearNextCostume'));
+            blocks.push(watcherToggle('getCostumeIdx'));
+            blocks.push(block('getCostumeIdx'));
+            blocks.push('-');
+            blocks.push(block('changeEffect'));
+            blocks.push(block('setEffect'));
+            blocks.push(block('clearEffects'));
+            blocks.push('-');
+            blocks.push(block('changeScale'));
+            blocks.push(block('setScale'));
+            blocks.push(watcherToggle('getScale'));
+            blocks.push(block('getScale'));
+            blocks.push('-');
+            blocks.push(block('show'));
+            blocks.push(block('hide'));
+            blocks.push('-');
+            blocks.push(block('comeToFront'));
+            blocks.push(block('goBack'));
+        }
     // for debugging: ///////////////
 
         if (this.world().isDevMode) {
@@ -1826,20 +1866,21 @@ SpriteMorph.prototype.blockTemplates = function (category) {
     /////////////////////////////////
 
     } else if (cat === 'sound') {
-
-        blocks.push(block('playSound'));
-        blocks.push(block('doPlaySoundUntilDone'));
-        blocks.push(block('doStopAllSounds'));
-        blocks.push('-');
-        blocks.push(block('doRest'));
-        blocks.push('-');
-        blocks.push(block('doPlayNote'));
-        blocks.push('-');
-        blocks.push(block('doChangeTempo'));
-        blocks.push(block('doSetTempo'));
-        blocks.push(watcherToggle('getTempo'));
-        blocks.push(block('getTempo'));
-
+        if (this.world().isDevMode) {
+            blocks.push(block('playSound'));
+            blocks.push(block('doPlaySoundUntilDone'));
+            blocks.push(block('doStopAllSounds'));
+            blocks.push('-');
+            blocks.push(block('doRest'));
+            blocks.push('-');
+            blocks.push(block('doPlayNote'));
+            blocks.push('-');
+            blocks.push(block('doChangeTempo'));
+            blocks.push(block('doSetTempo'));
+            blocks.push(watcherToggle('getTempo'));
+            blocks.push(block('getTempo'));
+        }
+        
     // for debugging: ///////////////
 
         if (this.world().isDevMode) {
@@ -1855,27 +1896,27 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         }
 
     } else if (cat === 'pen') {
-
-        blocks.push(block('clear'));
-        blocks.push('-');
-        blocks.push(block('down'));
-        blocks.push(block('up'));
-        blocks.push('-');
-        blocks.push(block('setColor'));
-        blocks.push(block('changeHue'));
-        blocks.push(block('setHue'));
-        blocks.push('-');
-        blocks.push(block('changeBrightness'));
-        blocks.push(block('setBrightness'));
-        blocks.push('-');
-        blocks.push(block('changeSize'));
-        blocks.push(block('setSize'));
-        blocks.push('-');
-        blocks.push(block('doStamp'));
-        blocks.push(block('floodFill'));
+        if (this.world().isDevMode) {
+            blocks.push(block('clear'));
+            blocks.push('-');
+            blocks.push(block('down'));
+            blocks.push(block('up'));
+            blocks.push('-');
+            blocks.push(block('setColor'));
+            blocks.push(block('changeHue'));
+            blocks.push(block('setHue'));
+            blocks.push('-');
+            blocks.push(block('changeBrightness'));
+            blocks.push(block('setBrightness'));
+            blocks.push('-');
+            blocks.push(block('changeSize'));
+            blocks.push(block('setSize'));
+            blocks.push('-');
+            blocks.push(block('doStamp'));
+            blocks.push(block('floodFill'));
+        }
 
     } else if (cat === 'control') {
-
         blocks.push(block('receiveGo'));
         blocks.push(block('receiveKey'));
         blocks.push(block('receiveInteraction'));
@@ -1932,10 +1973,19 @@ SpriteMorph.prototype.blockTemplates = function (category) {
 
     } else if (cat === 'sensing') {
 
-        blocks.push(block('reportTouchingObject'));
-        blocks.push(block('reportTouchingColor'));
-        blocks.push(block('reportColorIsTouchingColor'));
-        blocks.push('-');
+        if (this.world().isDevMode) {
+            blocks.push(block('reportTouchingObject'));
+            blocks.push(block('reportTouchingColor'));
+            blocks.push(block('reportColorIsTouchingColor'));
+            blocks.push('-');
+            blocks.push(block('reportAttributeOf'));
+            blocks.push('-');
+            blocks.push(block('reportURL'));
+            blocks.push('-');
+            blocks.push(block('reportIsFastTracking'));
+            blocks.push(block('doSetFastTracking'));
+            blocks.push('-');
+        }
         blocks.push(block('doAsk'));
         blocks.push(watcherToggle('getLastAnswer'));
         blocks.push(block('getLastAnswer'));
@@ -1954,13 +2004,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(watcherToggle('getTimer'));
         blocks.push(block('getTimer'));
         blocks.push('-');
-        blocks.push(block('reportAttributeOf'));
-        blocks.push('-');
-        blocks.push(block('reportURL'));
-        blocks.push('-');
-        blocks.push(block('reportIsFastTracking'));
-        blocks.push(block('doSetFastTracking'));
-        blocks.push('-');
+        
         blocks.push(block('reportDate'));
 
     // for debugging: ///////////////
@@ -2041,6 +2085,16 @@ SpriteMorph.prototype.blockTemplates = function (category) {
     /////////////////////////////////
 
     } else if (cat === 'variables') {
+        
+        if (world.isDevMode) {
+            blocks.push(block('rosBoolMessage'));
+            blocks.push(block('rosFloatMessage'));
+            blocks.push(block('rosStringMessage'));
+            blocks.push(block('rosCustomMessage'));
+            blocks.push(block('reportRosMessage'));
+            blocks.push(block('callRosService'));
+            blocks.push('-');
+        }
 
         button = new PushButtonMorph(
             null,

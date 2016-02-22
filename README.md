@@ -1,3 +1,10 @@
+File ros.js contains URI to rosbridge server which needs to be modified. In Snap! dev-mode new blocks for communication with ROS are avaiable. You can use these blocks for defining your own, specific for robot control. These blocks can publish any message for particular topic and ask service of specific type. ROS services requires type "StringService" which definition is as follows:
+
+string request
+---
+string response
+
+Setup instructions soon
 
 Snap! Build Your Own Blocks
 

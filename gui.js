@@ -559,6 +559,41 @@ IDE_Morph.prototype.createControlBar = function () {
     };
     this.add(this.controlBar);
 
+    //connectButton
+    button = new ToggleButtonMorph(
+        null, //colors,
+        myself, // the IDE is the target
+        'rosConnect',
+        [
+            new SymbolMorph('flash', 12),
+            new SymbolMorph('flash', 14)
+        ]
+        ,
+        myself.isRosConnected // query
+    );
+
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColors = [new Color(255, 50, 0), new Color(255, 250, 255)];
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    button.hint = 'connect to ROS Bridge\nconnect\\disconnect';
+    button.fixLayout();
+    button.refresh();
+    connectButton = button;
+    this.controlBar.add(connectButton);
+    this.controlBar.connectButton = button; // for refreshing
+    
+    //try auto connect on load
+    this.rosConnect()
+    
+    
     //smallStageButton
     button = new ToggleButtonMorph(
         null, //colors,
@@ -800,7 +835,7 @@ IDE_Morph.prototype.createControlBar = function () {
             myself.right() - StageMorph.prototype.dimensions.x *
                 (myself.isSmallStage ? myself.stageRatio : 1)
         );
-        [stageSizeButton, appModeButton].forEach(
+        [connectButton, stageSizeButton, appModeButton].forEach(
             function (button) {
                 x += padding;
                 button.setCenter(myself.controlBar.center());
@@ -4792,6 +4827,29 @@ IDE_Morph.prototype.prompt = function (message, callback, choices, key) {
         choices
     );
 };
+
+//Ros stuff
+IDE_Morph.prototype.rosConnect = function () {
+    var myself = this;
+    rosManager.connect(
+        function () {
+            //myself.showMessage('Environment connected successfully');
+            myself.controlBar.connectButton.refresh();
+        },
+        function () {
+            myself.showMessage('Disconnected from environment');
+            myself.controlBar.connectButton.refresh();
+        },
+        function () {
+            myself.showMessage('Error while connecting to environment!');
+            myself.controlBar.connectButton.refresh();
+        }
+    );
+}
+
+IDE_Morph.prototype.isRosConnected = function () {
+    return rosManager.isConnected();
+}
 
 // ProjectDialogMorph ////////////////////////////////////////////////////
 

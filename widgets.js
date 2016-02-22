@@ -811,13 +811,19 @@ ToggleButtonMorph.prototype.createLabel = function () {
                 this.label.shadowOffset = shading ?
                         this.labelShadowOffset : none;
                 this.label.shadowColor = this.labelShadowColor;
-                this.label.color = this.labelColor;
+                if(this.labelColors && this.labelColors.length >= 2)
+                    this.label.color = this.labelColors[0];
+                else
+                    this.label.color = this.labelColor;
                 this.label.drawNew();
 
                 this.trueStateLabel.shadowOffset = shading ?
                         this.labelShadowOffset : none;
                 this.trueStateLabel.shadowColor = this.labelShadowColor;
-                this.trueStateLabel.color = this.labelColor;
+                if(this.labelColors && this.labelColors.length >= 2)
+                    this.trueStateLabel.color = this.labelColors[1];
+                else
+                    this.trueStateLabel.color = this.labelColor;
                 this.trueStateLabel.drawNew();
             }
         } else if (this.labelString[0] instanceof Morph) {

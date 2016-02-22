@@ -2058,6 +2058,74 @@ Process.prototype.reportURL = function (url) {
     this.pushContext();
 };
 
+// Process ros blocks
+
+Process.prototype.rosBoolMessage = function (topic, boolean) {
+    topic = this.processRosName(this, topic);
+    rosManager.boolMessage(topic, boolean);
+    //console.log("topic: "+topic +" message: "+boolean);
+};
+
+Process.prototype.rosStringMessage = function (topic, message) {
+    topic = this.processRosName(this, topic);
+    rosManager.stringMessage(topic, message);
+    //console.log("topic: "+topic+" message: "+message);
+};
+
+Process.prototype.rosFloatMessage = function (topic, message) {
+    topic = this.processRosName(this, topic);
+    rosManager.floatMessage(topic, message);
+};
+
+Process.prototype.rosCustomMessage = function (topic, message, msgType) {
+    topic = this.processRosName(this, topic);
+    rosManager.customMessage(topic, message, msgType);
+};
+
+Process.prototype.reportRosMessage = function (topic) {
+    topic = this.processRosName(this, topic);
+    return rosManager.getMessage(topic);
+    //console.log("topic: "+topic);
+};
+Process.prototype.callRosService = function (name, message) {
+
+    if(!this.response && !this.busy)
+    {
+        var parrent = this;
+        name = this.processRosName(this, name);
+        this.busy = rosManager.callService(name, message,
+            function(result) {
+                parrent.response = result.response;
+                //console.log('Result for service call: '+ result);
+            }
+        );
+        if(!this.busy)
+            return "";
+    }
+    if (this.response && this.busy) {
+        this.busy = false;
+        responseText = this.response;
+        this.response = null;
+        return responseText;
+    }
+    this.pushContext('doYield');
+    this.pushContext();
+};
+
+
+Process.prototype.processRosName = function(parrent, name)
+{
+    if(name.slice(0, 2) == "%%")
+    {
+        name = "/"+name.replace("%%", parrent.blockReceiver().name);
+        //console.log(name);
+    }
+    return name
+}
+Process.prototype.reportName = function () {
+    return this.blockReceiver().name;
+};
+
 // Process event messages primitives
 
 Process.prototype.doBroadcast = function (message) {

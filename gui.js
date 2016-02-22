@@ -235,12 +235,12 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 
     this.isAutoFill = isAutoFill === undefined ? true : isAutoFill;
     this.isAppMode = false;
-    this.isSmallStage = false;
+    this.isSmallStage = true;
     this.filePicker = null;
     this.hasChangedMedia = false;
 
     this.isAnimating = true;
-    this.stageRatio = 1; // for IDE animations, e.g. when zooming
+    this.stageRatio = 0.5; // for IDE animations, e.g. when zooming
 
     this.loadNewProject = false; // flag when starting up translated
     this.shield = null;
@@ -537,6 +537,7 @@ IDE_Morph.prototype.createControlBar = function () {
         projectButton,
         settingsButton,
         stageSizeButton,
+        connectButton,
         appModeButton,
         cloudButton,
         x,
@@ -1355,7 +1356,20 @@ IDE_Morph.prototype.createCorralBar = function () {
     this.corralBar.color = this.frameColor;
     this.corralBar.setHeight(this.logo.height()); // height is fixed
     this.add(this.corralBar);
-
+    
+    label = new StringMorph(
+            localize('Devices'),
+            14,
+            'sans-serif',
+            true,
+            false,
+            false,
+            MorphicPreferences.isFlat ? null : new Point(2, 1),
+            new Color(55, 55, 55), new Color(255, 255, 255)
+        );
+    label.drawNew();
+    this.corralBar.add(label);
+    
     // new sprite button
     newbutton = new PushButtonMorph(
         this,
@@ -1377,7 +1391,8 @@ IDE_Morph.prototype.createCorralBar = function () {
     newbutton.fixLayout();
     newbutton.setCenter(this.corralBar.center());
     newbutton.setLeft(this.corralBar.left() + padding);
-    this.corralBar.add(newbutton);
+    if(world.isDevMode)
+        this.corralBar.add(newbutton);
 
     paintbutton = new PushButtonMorph(
         this,
@@ -1401,7 +1416,8 @@ IDE_Morph.prototype.createCorralBar = function () {
     paintbutton.setLeft(
         this.corralBar.left() + padding + newbutton.width() + padding
     );
-    this.corralBar.add(paintbutton);
+    if(world.isDevMode)
+        this.corralBar.add(paintbutton);
 };
 
 IDE_Morph.prototype.createCorral = function () {
@@ -1687,6 +1703,8 @@ IDE_Morph.prototype.droppedAudio = function (anAudio, name) {
     this.currentSprite.addSound(anAudio, name.split('.')[0]); // up to period
     this.spriteBar.tabBar.tabTo('sounds');
     this.hasChangedMedia = true;
+    //upload audio on robot
+    rosManager.requestData(this.serializer.serialize(this.currentSprite.allParts()));
 };
 
 IDE_Morph.prototype.droppedText = function (aString, name) {
@@ -1821,6 +1839,7 @@ IDE_Morph.prototype.stopAllScripts = function () {
     }
     this.controlBar.stopButton.refresh();
     this.stage.fireStopAllEvent();
+    rosManager.terminate();
 };
 
 IDE_Morph.prototype.selectSprite = function (sprite) {
@@ -2549,6 +2568,7 @@ IDE_Morph.prototype.projectMenu = function () {
     }
 
     menu = new MenuMorph(this);
+    menu.addItem('Search for devices', function(){rosManager.requestData("-");});
     menu.addItem('Project notes...', 'editProjectNotes');
     menu.addLine();
     menu.addItem('New', 'createNewProject');

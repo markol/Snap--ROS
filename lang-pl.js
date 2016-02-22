@@ -208,6 +208,8 @@ SnapTranslator.dict.pl = {
         'D\u017Awi\u0119k',
     'Pen':
         'Pisak',
+    'Special':
+        'Specjalne',
     'Control':
         'Kontrola',
     'Sensing':
@@ -238,7 +240,8 @@ SnapTranslator.dict.pl = {
         'Duszek',
     'Stage':
         'Scena',
-
+    'Devices':
+        'Urz\u0105dzenia',
     // rotation styles:
     'don\'t rotate':
         'nie obracaj',
@@ -651,6 +654,8 @@ SnapTranslator.dict.pl = {
         'enable Morphic',
 
     // project menu
+    'Search for devices':
+        'Szukaj urz\u0105dze\u0144',
     'Project notes...':
         'O projekcie...',
     'New':

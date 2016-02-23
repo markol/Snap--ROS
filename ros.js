@@ -97,7 +97,7 @@ RosManager.prototype.callService = function(name, message, functionHndlr)
         var srvClient = this.getService(name);
 
         var request = new ROSLIB.ServiceRequest({
-            request:message
+            request: String(message)
         });
 
         srvClient.callService(request, functionHndlr);

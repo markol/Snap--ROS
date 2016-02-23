@@ -628,6 +628,19 @@ SnapSerializer.prototype.loadSprites = function (xmlString, ide) {
         }
         if (model.attributes.name) {
             sprite.name = model.attributes.name;
+            //check for already loaded duplicates
+            var isDuplicate = false;
+            ide.sprites.contents.forEach(function(loadedSprite)
+                {
+                    if (loadedSprite.name === sprite.name)
+                    {
+                        isDuplicate = true;
+                        return;
+                    }
+                }
+            );
+            if(isDuplicate)
+                return;
             project.sprites[model.attributes.name] = sprite;
         }
         if (model.attributes.color) {

@@ -2232,6 +2232,7 @@ Morph.prototype.init = function (noDraw) {
     this.customContextMenu = null;
     this.lastTime = Date.now();
     this.onNextStep = null; // optional function to be run once
+    this.nextStepsLst = []; // for asynchronous task queueing
 };
 
 // Morph string representation: e.g. 'a Morph 2 [20@45 | 130@250]'
@@ -2283,13 +2284,14 @@ Morph.prototype.stepFrame = function () {
 };
 
 Morph.prototype.nextSteps = function (arrayOfFunctions) {
-    var lst = arrayOfFunctions || [],
-        nxt = lst.shift(),
+    if(arrayOfFunctions)
+        this.nextStepsLst = this.nextStepsLst.concat(arrayOfFunctions || []);
+        var nxt = this.nextStepsLst.shift(),
         myself = this;
     if (nxt) {
         this.onNextStep = function () {
             nxt.call(myself);
-            myself.nextSteps(lst);
+            myself.nextSteps();
         };
     }
 };

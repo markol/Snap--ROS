@@ -832,7 +832,7 @@ IDE_Morph.prototype.createControlBar = function () {
         );
 
         x = Math.min(
-            startButton.left() - (3 * padding + 2 * stageSizeButton.width()),
+            startButton.left() - (4 * padding + 3 * stageSizeButton.width()),
             myself.right() - StageMorph.prototype.dimensions.x *
                 (myself.isSmallStage ? myself.stageRatio : 1)
         );
@@ -3613,7 +3613,8 @@ IDE_Morph.prototype.openBlocksString = function (str, name, silently) {
             myself.rawOpenBlocksString(str, name, silently);
         },
         function () {
-            msg.destroy();
+            if(msg)
+                msg.destroy();
         }
     ]);
 };
@@ -3660,7 +3661,8 @@ IDE_Morph.prototype.openSpritesString = function (str) {
             myself.rawOpenSpritesString(str);
         },
         function () {
-            msg.destroy();
+            if(msg)
+                msg.destroy();
         }
     ]);
 };

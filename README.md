@@ -6,6 +6,7 @@ string response</pre>
 
 Setup instructions soon
 
+---
 Snap! Build Your Own Blocks
 
 http://snap.berkeley.edu
